@@ -1,0 +1,127 @@
+<%- include("partials/header", { title: "Add Book" }) %>
+
+<section class="p-6 mx-auto bg-white rounded-lg shadow"> 
+  <h1 class="mb-6 text-2xl font-bold">Add Book</h1>
+
+  <form action="/books" method="POST" class="space-y-4">
+    <!-- Title -->
+    <div>
+      <label class="block mb-1 text-sm font-medium">Title *</label>
+      <input
+        type="text"
+        name="title"
+        required
+        class="w-full p-2 border rounded focus:ring focus:border-blue-500"
+      />
+    </div>
+
+    <!-- Author -->
+    <div>
+      <label class="block mb-1 text-sm font-medium">Author *</label>
+      <input
+        type="text"
+        name="author"
+        required
+        class="w-full p-2 border rounded focus:ring focus:border-blue-500"
+      />
+    </div>
+
+    <!-- ISBN -->
+    <div>
+      <label class="block mb-1 text-sm font-medium">ISBN</label>
+      <input
+        type="text"
+        id="isbn"
+        name="isbn"
+        placeholder="Optional"
+        class="w-full p-2 border rounded focus:ring focus:border-blue-500"
+      />
+      <p id="isbn-hint"  class="mt-1 text-xs text-gray-500">
+        Used only to fetch the book cover
+      </p>
+    </div>
+
+    <!-- Rating -->
+    <div>
+      <label class="block mb-1 text-sm font-medium">Rating *</label>
+      <select name="rating" required class="p-2 border rounded">
+        <option value="">Select rating</option>
+        <% for (let i = 1; i <= 5; i++) { %>
+        <option value="<%= i %>"><%= i %></option>
+        <% } %>
+      </select>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <label class="block mb-1 text-sm font-medium">Description</label>
+      <textarea
+        name="description"
+        rows="3"
+        class="w-full p-2 border rounded focus:ring focus:border-blue-500"
+      ></textarea>
+    </div>
+
+    <!-- Notes -->
+    <div>
+      <label class="block mb-1 text-sm font-medium">Notes</label>
+      <textarea
+        name="notes"
+        rows="4"
+        class="w-full p-2 border rounded focus:ring focus:border-blue-500"
+      ></textarea>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-3 pt-4">
+      <button
+        type="submit"
+        class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+      >
+        Add Book
+      </button>
+
+      <a href="/" class="px-4 py-2 text-gray-600 hover:underline"> Cancel </a>
+    </div>
+  </form>
+</section>
+
+<script>
+
+  const form = document.querySelector("form");
+  const isbnInput = document.querySelector("#isbn");
+  const hint = document.querySelector("#isbn-hint");
+
+  const defaultText = hint.textContent;
+
+  form.addEventListener("submit", (e) => {
+    const isbn = isbnInput.value.trim();
+
+    if (!isbn) return;
+
+    const isValid =
+      /^[0-9]{13}$/.test(isbn) ||
+      /^[0-9]{9}[0-9X]$/.test(isbn);
+
+    if (!isValid) {
+      e.preventDefault();
+
+      isbnInput.classList.add("border-red-500");
+
+      hint.textContent = "The ISBN entered is invalid";
+      hint.classList.remove("text-gray-500");
+      hint.classList.add("text-red-500");
+    }
+  });
+
+  isbnInput.addEventListener("input", () => {
+    isbnInput.classList.remove("border-red-500");
+
+    hint.textContent = defaultText;
+    hint.classList.remove("text-red-500");
+    hint.classList.add("text-gray-500");
+  });
+
+</script>
+
+<%- include("partials/footer") %>

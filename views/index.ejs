@@ -1,0 +1,101 @@
+<%- include("partials/header", { title: "My Books" }) %>
+
+<section class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold">My Books</h1>
+
+  <!-- Sorting -->
+  <div class="flex gap-2">
+    <a href="/?sort=rating" class="text-sm text-blue-600 hover:underline">
+      Sort by rating
+    </a>
+    <a href="/?sort=date" class="text-sm text-blue-600 hover:underline">
+      Sort by recency
+    </a>
+  </div>
+</section>
+
+<% if (books && books.length > 0) { %>
+
+<ul class="space-y-4">
+<% books.forEach(book => { %>
+  <!-- Main Card Container: flex-col ensures stacking on all screens, relative for button -->
+  <li class="relative flex flex-col p-4 bg-white rounded-lg shadow">
+
+    <!-- Wrapper for Cover + Info Area -->
+    <div class="flex items-start w-full gap-4">
+      
+      <!-- Cover (Fixed width) -->
+      <div class="flex-shrink-0 w-20 h-28">
+        <% if (book.cover) { %>
+          <img 
+            src="<%= book.cover %>"
+            alt="<%= book.title %>"
+            class="object-cover w-full h-full rounded"
+          />
+        <% } else { %>
+          <div class="flex items-center justify-center w-20 text-xs text-gray-500 bg-gray-200 rounded h-28">
+            no cover
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Info Area (Flex-grow takes remaining space, content inside is stacked using flex-col) -->
+      <div class="flex flex-col flex-grow">
+        <h2 class="text-lg font-semibold leading-tight"><%= book.title %></h2>
+        <p class="text-sm text-gray-500"><%= book.author %></p>
+
+        <div class="flex items-center gap-2 mt-2">
+          <span class="text-sm font-medium">Rating:</span>
+          <span class="text-yellow-500">
+            <%= "★".repeat(book.rating) %>
+            <%= "☆".repeat(5 - book.rating) %>
+          </span>
+        </div>
+        
+        <!-- Description -->
+        <% if (book.description) { %>
+          <p class="mt-2 text-sm text-gray-700 line-clamp-2">
+            <%= book.description %>
+          </p>
+        <% } else { %>
+             <p class="mt-2 text-sm text-gray-700">
+            no book description provided.
+          </p>
+       <% } %>
+      </div>
+    </div> 
+
+    
+
+    <!-- Actions: The button container (wide bottom mobile, top-right desktop) -->
+    <div class="w-full mt-4 md:mt-0 md:absolute md:top-4 md:right-4 md:w-auto">
+        <a 
+          href="/notes/<%= book.id %>"
+          class="block w-full px-4 py-2 text-sm font-semibold text-center text-white bg-blue-600 rounded shadow hover:bg-blue-700 md:w-auto md:inline-block md:py-1 md:px-3"
+        >
+          See notes
+        </a>
+    </div>
+
+  </li>
+<% }) %>
+</ul>
+
+<!-- PAGINATION -->
+<div class="flex justify-between mt-4">
+  <% if (page > 1) { %>
+    <a href="/?page=<%= page - 1 %>&sort=<%= sort %>" class="px-4 py-2 bg-gray-200 rounded">Previous</a>
+  <% } else { %>
+    <span class="px-4 py-2 text-gray-400 bg-gray-100 rounded cursor-not-allowed">Previous</span>
+  <% } %>
+
+  <% if (hasNextPage) { %>
+    <a href="/?page=<%= page + 1 %>&sort=<%= sort %>" class="px-4 py-2 bg-gray-200 rounded">Next</a>
+  <% } else { %>
+    <span class="px-4 py-2 text-gray-400 bg-gray-100 rounded cursor-not-allowed">Next</span>
+  <% } %>
+</div>
+
+<% } else { %>
+<p class="text-gray-600">No books added yet.</p>
+<% } %> <%- include("partials/footer") %>
