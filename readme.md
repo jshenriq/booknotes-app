@@ -1,4 +1,4 @@
-# Booknote App
+# Booknotes App
 
 ![Node.js](https://img.shields.io/badge/Node.js-green?logo=node.js)
 ![Express](https://img.shields.io/badge/Express.js-black?logo=express)
